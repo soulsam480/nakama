@@ -1,5 +1,17 @@
 <script setup lang="ts">
 import { NSpace, NLayoutHeader, NButton } from 'naive-ui';
+import { useAuth } from 'src/composables/auth';
+
+const { googleSignin } = useAuth();
+
+async function login() {
+  try {
+    const data = await googleSignin();
+    console.log(data);
+  } catch (error) {
+    console.log(error);
+  }
+}
 </script>
 <template>
   <div>
@@ -9,7 +21,7 @@ import { NSpace, NLayoutHeader, NButton } from 'naive-ui';
           <div class="text-lime-300 text-xl">Nakama</div>
 
           <n-space justify="space-between">
-            <n-button type="primary" size="small">Login | Signup</n-button>
+            <n-button type="primary" size="small" @click="login">Login | Signup</n-button>
           </n-space>
         </n-space>
       </div>
