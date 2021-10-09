@@ -4,7 +4,6 @@ import { NSpin } from 'naive-ui';
 
 <template>
   <div
-    wire:loading
     class="
       fixed
       top-0

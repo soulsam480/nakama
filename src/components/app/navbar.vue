@@ -3,14 +3,20 @@ import { NSpace, NLayoutHeader, NButton, NDropdown } from 'naive-ui';
 import { DropdownMixedOption } from 'naive-ui/lib/dropdown/src/interface';
 import { useAuth } from 'src/composables/auth';
 import { useLoader } from 'src/composables/loader';
+import { useUsers } from 'src/composables/users';
 
 const { googleSignin, logout, isLoggedIn, user } = useAuth();
+const { findUser, addUser } = useUsers();
 const { start, stop } = useLoader();
 
 async function login() {
   try {
     start();
-    await googleSignin();
+    const data = await googleSignin();
+
+    if (await findUser(data.id)) return;
+
+    await addUser(data.id as string, data);
   } catch (error) {
     console.log(error);
   } finally {

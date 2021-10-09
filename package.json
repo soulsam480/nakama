@@ -10,7 +10,7 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preserve": "vite build",
-    "serve": "vite preview --port 5050",
+    "serve": "vite preview",
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {

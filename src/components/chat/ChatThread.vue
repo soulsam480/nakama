@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { NAvatar } from 'naive-ui';
+import { User } from 'src/types';
 
 defineEmits<{
   (e: 'select-chat'): void;
 }>();
+
+defineProps<{ user: User }>();
 </script>
 <template>
   <div
@@ -16,16 +19,20 @@ defineEmits<{
       cursor-pointer
       flex
       items-center
-      transition transition-all
+      transition transition-colors
       duration-300
       ease-in-out
       space-x-3
     "
     @click="$emit('select-chat')"
   >
-    <n-avatar round size="small" src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" />
+    <n-avatar
+      round
+      size="small"
+      :src="user.image || 'https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg'"
+    />
     <div class="flex flex-col space-y-2">
-      <div class="text-sm">Sambit Sahoo</div>
+      <div class="text-sm">{{ user.name }}</div>
     </div>
   </div>
 </template>

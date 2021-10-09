@@ -4,6 +4,11 @@ import { NAvatar, NButton } from 'naive-ui';
 import { useAuth } from 'src/composables/auth';
 
 const { user } = useAuth();
+
+defineProps<{ userLoading: boolean }>();
+defineEmits<{
+  (e: 'refresh'): void;
+}>();
 </script>
 <template>
   <div
@@ -23,6 +28,9 @@ const { user } = useAuth();
   >
     <n-avatar round size="small" :src="user?.image" />
     <div>
+      <n-button @click="$emit('refresh')" size="tiny" type="primary" :loading="userLoading">
+        Refresh
+      </n-button>
       <!-- <n-button text type="primary" size="large">
         <template #icon>
           <i-ion-menu

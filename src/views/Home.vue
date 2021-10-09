@@ -2,17 +2,44 @@
 import { NLayout, NLayoutContent, NLayoutHeader, NLayoutSider, NAvatar } from 'naive-ui';
 import ChatThread from 'src/components/chat/ChatThread.vue';
 import TopContext from 'src/components/chat/TopContext.vue';
+import { useAuth } from 'src/composables/auth';
 import { useScreenWidth } from 'src/composables/screen';
-import { computed, ref } from 'vue';
+import { useUsers } from 'src/composables/users';
+import { User } from 'src/types';
+import { computed, onMounted, ref } from 'vue';
 // import { useRoute } from 'vue-router';
 
 const width = useScreenWidth();
+const { allUsers } = useUsers();
+const { user } = useAuth();
 // const $route = useRoute();
 
 const isChatSelected = ref(false);
+const userLoading = ref(false);
+const users = ref<User[]>([]);
+
+const chatContext = ref<string | null>(null);
+
 const isMobile = computed(() => width.value < 600);
 
 const isSidebar = computed(() => !isMobile.value || !isChatSelected.value);
+
+async function refreshUsers() {
+  if (userLoading.value) return;
+  userLoading.value = true;
+  users.value = [];
+
+  try {
+    const data = await allUsers(user.value?.id);
+    users.value = [...data];
+  } catch (error) {
+    console.log(error.toString());
+  } finally {
+    userLoading.value = false;
+  }
+}
+
+onMounted(() => refreshUsers());
 </script>
 
 <template>
@@ -27,8 +54,13 @@ const isSidebar = computed(() => !isMobile.value || !isChatSelected.value);
         :collapsed-width="0"
         v-if="isSidebar"
       >
-        <top-context />
-        <chat-thread v-for="i in 30" :key="i" @select-chat="isChatSelected = true" />
+        <top-context :user-loading="userLoading" @refresh="refreshUsers" />
+        <chat-thread
+          v-for="user in users"
+          :key="user.id"
+          :user="user"
+          @select-chat="isChatSelected = true"
+        />
       </n-layout-sider>
 
       <n-layout class="h-full bg-cool-gray-700" :native-scrollbar="false">
