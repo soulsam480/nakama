@@ -16,7 +16,8 @@
     },
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"],
     "skipLibCheck": true,
-    "useUnknownInCatchVariables": false
+    "useUnknownInCatchVariables": false,
+    "types": ["unplugin-icons/types/vue"]
   },
   "include": ["vite.config.*", "env.d.ts", "src/**/*", "src/**/*.vue"]
 }

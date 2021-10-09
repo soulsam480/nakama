@@ -1,10 +1,10 @@
 import { createApp } from 'vue';
-import App from './App.vue';
+import Provided from './Providers.vue';
 import router from './router';
 
 import 'virtual:windi.css';
 
-const app = createApp(App);
+const app = createApp(Provided);
 
 app.use(router);
 
