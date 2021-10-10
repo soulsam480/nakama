@@ -3,20 +3,23 @@ import { NLayout, NLayoutContent, NLayoutHeader, NLayoutSider, NAvatar } from 'n
 import ChatThread from 'src/components/chat/ChatThread.vue';
 import TopContext from 'src/components/chat/TopContext.vue';
 import { useAuth } from 'src/composables/auth';
+import { useChats } from 'src/composables/chats';
 import { useScreenWidth } from 'src/composables/screen';
 import { useUsers } from 'src/composables/users';
-import { User } from 'src/types';
+import { Chat, User } from 'src/types';
 import { computed, onMounted, ref } from 'vue';
 // import { useRoute } from 'vue-router';
 
 const width = useScreenWidth();
 const { allUsers } = useUsers();
+const { getChats } = useChats();
 const { user } = useAuth();
 // const $route = useRoute();
 
 const isChatSelected = ref(false);
 const userLoading = ref(false);
 const users = ref<User[]>([]);
+const chats = ref<Chat[]>([]);
 
 const chatContext = ref<string | null>(null);
 
@@ -39,7 +42,23 @@ async function refreshUsers() {
   }
 }
 
-onMounted(() => refreshUsers());
+async function getAllChats() {
+  if (userLoading.value) return;
+  userLoading.value = true;
+  chats.value = [];
+
+  try {
+    const data = await getChats(user.value?.id as string);
+
+    chats.value = [...data];
+  } catch (error) {
+    console.log(error.toString());
+  } finally {
+    userLoading.value = false;
+  }
+}
+
+onMounted(() => getAllChats());
 </script>
 
 <template>
@@ -56,9 +75,9 @@ onMounted(() => refreshUsers());
       >
         <top-context :user-loading="userLoading" @refresh="refreshUsers" />
         <chat-thread
-          v-for="user in users"
-          :key="user.id"
-          :user="user"
+          v-for="chat in chats"
+          :key="chat.id"
+          :chat="chat"
           @select-chat="isChatSelected = true"
         />
       </n-layout-sider>

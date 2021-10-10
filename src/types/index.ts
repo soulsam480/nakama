@@ -14,10 +14,11 @@ interface Message {
 }
 
 export interface Chat {
-  from: string;
-  to: string;
+  from: User;
+  to: User;
   messages: Message[];
   on: Date;
+  id: string;
 }
 
 export const LoaderKey: InjectionKey<{

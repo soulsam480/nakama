@@ -2,6 +2,7 @@
 // import { ref } from 'vue';
 import { NAvatar, NButton } from 'naive-ui';
 import { useAuth } from 'src/composables/auth';
+import SearchUser from './SearchUser.vue';
 
 const { user } = useAuth();
 
@@ -27,21 +28,7 @@ defineEmits<{
     "
   >
     <n-avatar round size="small" :src="user?.image" />
-    <div>
-      <n-button @click="$emit('refresh')" size="tiny" type="primary" :loading="userLoading">
-        Refresh
-      </n-button>
-      <!-- <n-button text type="primary" size="large">
-        <template #icon>
-          <i-ion-menu
-            style="
-               {
-                font-size: 'inherit';
-              }
-            "
-          />
-        </template>
-      </n-button> -->
-    </div>
+
+    <search-user />
   </div>
 </template>

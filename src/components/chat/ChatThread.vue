@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { NAvatar } from 'naive-ui';
-import { User } from 'src/types';
+import { useAuth } from 'src/composables/auth';
+import { Chat } from 'src/types';
 
 defineEmits<{
   (e: 'select-chat'): void;
 }>();
 
-defineProps<{ user: User }>();
+const { user } = useAuth();
+
+defineProps<{ chat: Chat }>();
 </script>
 <template>
   <div
@@ -29,10 +32,14 @@ defineProps<{ user: User }>();
     <n-avatar
       round
       size="small"
-      :src="user.image || 'https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg'"
+      :src="
+        chat.from.id === user?.id
+          ? chat.to.image
+          : chat.from.image || 'https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg'
+      "
     />
     <div class="flex flex-col space-y-2">
-      <div class="text-sm">{{ user.name }}</div>
+      <div class="text-sm">{{ chat.from.id === user?.id ? chat.to.name : chat.from.name }}</div>
     </div>
   </div>
 </template>
